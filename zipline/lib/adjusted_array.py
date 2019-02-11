@@ -237,6 +237,19 @@ class AdjustedArray(object):
             adjustments=self.adjustments,
         )
 
+    def map(self, func):
+        """
+        Map values with ``func`` in-place.
+        """
+        msg = 'map only supported if data is of type LabelArray'
+        assert isinstance(self.data, LabelArray), msg
+
+        self._data = self._data.map(func)
+
+        for _, row_adjustments in self.adjustments.iteritems():
+            for adjustment in row_adjustments:
+                adjustment.value = func(adjustment.value)
+
 
 def ensure_adjusted_array(ndarray_or_adjusted_array, missing_value):
     if isinstance(ndarray_or_adjusted_array, AdjustedArray):
